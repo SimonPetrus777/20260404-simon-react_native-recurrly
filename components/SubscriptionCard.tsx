@@ -49,14 +49,14 @@ const SubscriptionCard = ({
                             <View className="sub-row-copy">
                                 <Text className="sub-label">Payment</Text>
                                 <Text className="sub-value" numberOfLines={1}
-                                      ellipsizeMode="tail">{paymentMethod?.trim()}</Text>
+                                      ellipsizeMode="tail">{paymentMethod?.trim() ?? 'Not provided'}</Text>
                             </View>
                         </View>
                         <View className="sub-row">
                             <View className="sub-row-copy">
                                 <Text className="sub-label">Category</Text>
                                 <Text className="sub-value" numberOfLines={1}
-                                      ellipsizeMode="tail">{category?.trim() || plan?.trim()}</Text>
+                                      ellipsizeMode="tail">{(category?.trim() || plan?.trim()) ?? 'Not provided'}</Text>
                             </View>
                         </View>
 
