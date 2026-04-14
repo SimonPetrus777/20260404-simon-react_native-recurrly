@@ -27,6 +27,8 @@ const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const [resendError, setResendError] = useState<string | null>(null);
+    const [isResendingCode, setIsResendingCode] = useState(false);
 
     const isSubmitting = fetchStatus === 'fetching';
     const needsEmailCode = signIn?.status === 'needs_client_trust';
@@ -90,6 +92,7 @@ const SignIn = () => {
 
         if (codeError) return;
 
+        setResendError(null);
         await signIn.mfa.verifyEmailCode({code: code.trim()});
 
         if (signIn.status === 'complete') {
@@ -99,6 +102,23 @@ const SignIn = () => {
                     navigateAfterAuth({decorateUrl, router});
                 },
             });
+        }
+    };
+
+    const handleResendEmailCode = async () => {
+        if (isResendingCode) return;
+
+        setIsResendingCode(true);
+        setResendError(null);
+
+        try {
+            await signIn.mfa.sendEmailCode();
+            setStatusMessage(`A fresh verification code was sent to ${emailAddress.trim()}.`);
+        } catch (error) {
+            const nextError = error instanceof Error ? error.message : 'We could not send a new code. Try again.';
+            setResendError(nextError);
+        } finally {
+            setIsResendingCode(false);
         }
     };
 
@@ -134,6 +154,7 @@ const SignIn = () => {
                 ) : null}
 
                 {globalError ? <Text className="auth-error">{globalError}</Text> : null}
+                {resendError ? <Text className="auth-error">{resendError}</Text> : null}
 
                 {needsEmailCode ? (
                     <>
@@ -157,8 +178,14 @@ const SignIn = () => {
                             <Text className="auth-button-text">Verify and continue</Text>
                         </Pressable>
 
-                        <Pressable className="auth-secondary-button" onPress={() => signIn.mfa.sendEmailCode()}>
-                            <Text className="auth-secondary-button-text">Send a new code</Text>
+                        <Pressable
+                            className={cn('auth-secondary-button', isResendingCode && 'auth-button-disabled')}
+                            onPress={handleResendEmailCode}
+                            disabled={isResendingCode}
+                        >
+                            <Text className="auth-secondary-button-text">
+                                {isResendingCode ? 'Sending...' : 'Send a new code'}
+                            </Text>
                         </Pressable>
 
                         <Pressable

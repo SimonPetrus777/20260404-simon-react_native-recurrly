@@ -28,6 +28,8 @@ const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [localErrors, setLocalErrors] = useState<Record<string, string>>({});
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const [resendError, setResendError] = useState<string | null>(null);
+    const [isResendingCode, setIsResendingCode] = useState(false);
 
     const isSubmitting = fetchStatus === 'fetching';
     const needsVerification =
@@ -76,6 +78,7 @@ const SignUp = () => {
 
         if (codeError) return;
 
+        setResendError(null);
         await signUp.verifications.verifyEmailCode({code: code.trim()});
 
         if (signUp.status === 'complete') {
@@ -85,6 +88,24 @@ const SignUp = () => {
                     navigateAfterAuth({decorateUrl, router});
                 },
             });
+        }
+    };
+
+    const handleResendEmailCode = async () => {
+        if (isResendingCode) return;
+
+        setIsResendingCode(true);
+        setResendError(null);
+        setStatusMessage(null);
+
+        try {
+            await signUp.verifications.sendEmailCode();
+            setStatusMessage(`A fresh code was sent to ${emailAddress.trim()}.`);
+        } catch (error) {
+            const nextError = error instanceof Error ? error.message : 'We could not send a new code. Try again.';
+            setResendError(nextError);
+        } finally {
+            setIsResendingCode(false);
         }
     };
 
@@ -122,6 +143,7 @@ const SignUp = () => {
                 ) : null}
 
                 {globalError ? <Text className="auth-error">{globalError}</Text> : null}
+                {resendError ? <Text className="auth-error">{resendError}</Text> : null}
 
                 {needsVerification ? (
                     <>
@@ -146,13 +168,13 @@ const SignUp = () => {
                         </Pressable>
 
                         <Pressable
-                            className="auth-secondary-button"
-                            onPress={async () => {
-                                await signUp.verifications.sendEmailCode();
-                                setStatusMessage(`A fresh code was sent to ${emailAddress.trim()}.`);
-                            }}
+                            className={cn('auth-secondary-button', isResendingCode && 'auth-button-disabled')}
+                            onPress={handleResendEmailCode}
+                            disabled={isResendingCode}
                         >
-                            <Text className="auth-secondary-button-text">Resend code</Text>
+                            <Text className="auth-secondary-button-text">
+                                {isResendingCode ? 'Sending...' : 'Resend code'}
+                            </Text>
                         </Pressable>
                     </>
                 ) : (
