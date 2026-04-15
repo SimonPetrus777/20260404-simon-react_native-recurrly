@@ -16,6 +16,30 @@ export const HOME_BALANCE = {
     nextRenewalDate: "2026-03-18T09:00:00.000Z",
 };
 
+export const SUBSCRIPTION_FREQUENCIES: SubscriptionFrequency[] = ["Monthly", "Yearly"];
+
+export const SUBSCRIPTION_CATEGORIES = [
+    "Entertainment",
+    "AI Tools",
+    "Developer Tools",
+    "Design",
+    "Productivity",
+    "Cloud",
+    "Music",
+    "Other",
+] as const;
+
+export const SUBSCRIPTION_CATEGORY_COLORS: Record<(typeof SUBSCRIPTION_CATEGORIES)[number], string> = {
+    Entertainment: "#f6d8ae",
+    "AI Tools": "#b8d4e3",
+    "Developer Tools": "#e8def8",
+    Design: "#f5c542",
+    Productivity: "#b8e8d0",
+    Cloud: "#b7d3f2",
+    Music: "#d2e7c9",
+    Other: "#f3e2c7",
+};
+
 export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
     {
         id: "spotify",

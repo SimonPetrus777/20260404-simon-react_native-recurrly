@@ -4,6 +4,8 @@ import {SplashScreen, Stack} from "expo-router";
 import '@/global.css';
 import {useFonts} from "expo-font";
 import {useEffect} from "react";
+import {PostHogProvider} from "posthog-react-native";
+import {SubscriptionProvider} from "@/lib/subscription-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,8 +31,15 @@ export default function RootLayout() {
     if (!publishableKey) throw new Error('Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY to your .env file.');
 
     return (
-        <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-            <Stack screenOptions={{headerShown: false}}/>
-        </ClerkProvider>
+        <PostHogProvider
+            apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY!}
+            options={{host: process.env.EXPO_PUBLIC_POSTHOG_HOST}}
+        >
+            <SubscriptionProvider>
+                <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+                    <Stack screenOptions={{headerShown: false}}/>
+                </ClerkProvider>
+            </SubscriptionProvider>
+        </PostHogProvider>
     );
 }
