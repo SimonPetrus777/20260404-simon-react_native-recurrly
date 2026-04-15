@@ -28,11 +28,19 @@ declare global {
         color?: string;
     }
 
+    type SubscriptionFrequency = "Monthly" | "Yearly";
+
     interface SubscriptionCardProps extends Omit<Subscription, "id"> {
         expanded: boolean;
         onPress: () => void;
         onCancelPress?: () => void;
         isCancelling?: boolean;
+    }
+
+    interface CreateSubscriptionModalProps {
+        visible: boolean;
+        onClose: () => void;
+        onCreateSubscription: (subscription: Subscription) => void;
     }
 
     interface UpcomingSubscription {

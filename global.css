@@ -226,6 +226,42 @@
         @apply py-4 text-sm font-sans-medium text-black/60;
     }
 
+    .subscriptions-header {
+        @apply pb-5 pt-2;
+    }
+
+    .subscriptions-title {
+        @apply text-3xl font-sans-bold text-primary;
+    }
+
+    .subscriptions-subtitle {
+        @apply mt-2 text-base font-sans-medium leading-6 text-muted-foreground;
+    }
+
+    .subscriptions-search-wrap {
+        @apply mt-5 rounded-2xl border border-border bg-card px-4;
+    }
+
+    .subscriptions-search-input {
+        @apply py-4 text-base font-sans-medium text-primary;
+    }
+
+    .subscriptions-results {
+        @apply mt-3 text-sm font-sans-semibold text-muted-foreground;
+    }
+
+    .subscriptions-empty {
+        @apply mt-8 rounded-3xl border border-dashed border-border bg-card px-5 py-8;
+    }
+
+    .subscriptions-empty-title {
+        @apply text-lg font-sans-bold text-primary;
+    }
+
+    .subscriptions-empty-copy {
+        @apply mt-2 text-sm font-sans-medium leading-6 text-muted-foreground;
+    }
+
     .auth-safe-area {
         @apply flex-1 bg-background;
     }
