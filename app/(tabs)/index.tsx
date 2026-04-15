@@ -38,8 +38,13 @@ export default function App() {
                                 <Text className="home-user-name">{displayName}</Text>
                             </View>
 
-                            <Pressable onPress={() => setCreateModalVisible(true)}>
-                                <Image source={icons.add} className="home-add-icon"/>
+                            <Pressable
+                                onPress={() => setCreateModalVisible(true)}
+                                accessibilityRole="button"
+                                accessibilityLabel="Create subscription"
+                                accessibilityHint="Opens the new subscription modal"
+                            >
+                                <Image source={icons.add} className="home-add-icon" accessible={false}/>
                             </Pressable>
                         </View>
 

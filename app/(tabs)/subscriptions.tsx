@@ -71,6 +71,9 @@ const Subscriptions = () => {
                                 autoCorrect={false}
                                 clearButtonMode="while-editing"
                                 returnKeyType="search"
+                                accessibilityLabel="Search subscriptions"
+                                accessibilityHint="Enter text to filter your subscriptions"
+                                accessibilityRole="search"
                             />
                         </View>
 
@@ -81,9 +84,13 @@ const Subscriptions = () => {
                 )}
                 ListEmptyComponent={(
                     <View className="subscriptions-empty">
-                        <Text className="subscriptions-empty-title">No matches found</Text>
+                        <Text className="subscriptions-empty-title">
+                            {normalizedQuery ? "No matches found" : "You have no subscriptions"}
+                        </Text>
                         <Text className="subscriptions-empty-copy">
-                            Try searching by service name, category, plan, or payment method.
+                            {normalizedQuery
+                                ? "Try searching by service name, category, plan, or payment method."
+                                : "Create a subscription from the home screen to start tracking your plans."}
                         </Text>
                     </View>
                 )}

@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, type ReactNode} from "react";
+import React, {createContext, useCallback, useContext, useMemo, useState, type ReactNode} from "react";
 import {HOME_SUBSCRIPTIONS} from "@/constants/data";
 
 type SubscriptionContextValue = {
@@ -11,12 +11,17 @@ const SubscriptionContext = createContext<SubscriptionContextValue | null>(null)
 export const SubscriptionProvider = ({children}: { children: ReactNode }) => {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>(HOME_SUBSCRIPTIONS);
 
-    const addSubscription = (subscription: Subscription) => {
+    const addSubscription = useCallback((subscription: Subscription) => {
         setSubscriptions((currentSubscriptions) => [subscription, ...currentSubscriptions]);
-    };
+    }, []);
+
+    const value = useMemo(() => ({
+        subscriptions,
+        addSubscription,
+    }), [subscriptions, addSubscription]);
 
     return (
-        <SubscriptionContext.Provider value={{subscriptions, addSubscription}}>
+        <SubscriptionContext.Provider value={value}>
             {children}
         </SubscriptionContext.Provider>
     );

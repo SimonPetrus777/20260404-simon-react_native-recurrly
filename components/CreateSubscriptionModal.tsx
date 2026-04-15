@@ -31,24 +31,23 @@ const CreateSubscriptionModal = ({
     const [nameError, setNameError] = useState<string | null>(null);
     const [priceError, setPriceError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!visible) {
-            setName("");
-            setPrice("");
-            setFrequency("Monthly");
-            setCategory("Entertainment");
-            setNameError(null);
-            setPriceError(null);
-        }
-    }, [visible]);
-
-    const handleClose = () => {
+    const resetForm = () => {
         setName("");
         setPrice("");
         setFrequency("Monthly");
         setCategory("Entertainment");
         setNameError(null);
         setPriceError(null);
+    };
+
+    useEffect(() => {
+        if (!visible) {
+            resetForm();
+        }
+    }, [visible]);
+
+    const handleClose = () => {
+        resetForm();
         onClose();
     };
 
@@ -200,6 +199,8 @@ const CreateSubscriptionModal = ({
                                 <Pressable
                                     className={cn("auth-button", hasInvalidDraft && "auth-button-disabled")}
                                     onPress={handleSubmit}
+                                    disabled={hasInvalidDraft}
+                                    accessibilityState={{disabled: hasInvalidDraft}}
                                 >
                                     <Text className="auth-button-text">Create Subscription</Text>
                                 </Pressable>
